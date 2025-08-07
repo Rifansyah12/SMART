@@ -1,0 +1,18 @@
+{
+    "vsmqtt.brokerProfiles": [
+        {
+            "name": "smartnose-uninus",
+            "host": "smartnose-uninus.cloud.shiftr.io",
+            "port": 1883,
+            "username": "smartnose-uninus",
+            "password": "0DKItrqWCc9bbr5w",
+            "clientId": "vsmqtt_client_5d7e",
+            "savedSubscriptions": [
+                {
+                    "topic": "smartnose-uninus/#",
+                    "qos": 1
+                }
+            ]
+        }
+    ]
+}

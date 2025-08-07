@@ -1,0 +1,184 @@
+<?php
+session_start();
+include "config/database.php";
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$message = "Masukkan Username dan Password";
+
+if (isset($_POST['username'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM user WHERE username = '$username' LIMIT 1";
+    $result = mysqli_query($conn, $sql);
+    $data = mysqli_fetch_assoc($result);
+
+    if (!mysqli_num_rows($result) > 0) {
+        $message = "<span style='color:#ff4d4d;'>Username tidak terdaftar.</span>";
+    } else {
+        if (password_verify($password, $data['password'])) {
+            $_SESSION['username'] = $username;
+            $_SESSION['fullname'] = $data['fullname'];
+            $_SESSION['role'] = $data['role'];
+
+            echo "<script>location.href='index.php';</script>";
+        } else {
+            $message = "<span style='color:#ff4d4d;'>Password salah.</span>";
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - Smart Green Park</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Segoe+UI:400,700&display=swap">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            color: #fff;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .login-logo {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .login-box-msg {
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .input-group input {
+            border: none;
+            background: transparent;
+            outline: none;
+            color: #fff;
+            flex: 1;
+            font-size: 1em;
+        }
+
+        .input-group i {
+            margin-right: 10px;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #009acb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.85em;
+            color: #ddd;
+            padding: 15px;
+        }
+
+        @media (max-width: 400px) {
+            .login-box {
+                padding: 20px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="login-box">
+            <div class="login-logo">SMART Green Park</div>
+            <p class="login-box-msg"><?php echo $message; ?></p>
+            <form action="" method="post">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Masuk</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2025 Smart Universitas Islam Nusantara
+    </div>
+</body>
+</html>
